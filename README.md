@@ -9,8 +9,10 @@
 |---|---|
 | `index.html` | LP 本体 (ja/en トグル) |
 | `privacy.html` | プライバシーポリシー (ja/en) |
-| `eula.html` | 利用規約 (EULA) |
 | `app-ads.txt` | AdMob 検証用 (ドメイン直下で配信される) |
+
+> 利用規約(EULA)は Apple 標準の Licensed Application EULA を採用するため自前ページは置かない
+> (アカウント/UGC共有なし・課金は Apple 経由のため特約不要)。
 | `styles.css` / `assets/` | スタイル / アイコン・スクショ |
 | `.github/workflows/pages.yml` | push で GitHub Pages へ自動デプロイ |
 
