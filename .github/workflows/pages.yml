@@ -1,0 +1,50 @@
+name: Deploy LP to GitHub Pages
+
+# main への push で site (リポジトリ直下) を GitHub Pages に公開する。
+# 手動再実行も可 (設定変更後の再デプロイ用)。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 本番デプロイは 1 本に絞り、進行中のものはキャンセルしない
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # ▼ 独自ドメイン plushkeys.com を使うとき(DNS設定後)に次の2行のコメントを外す。
+      #   先に有効化すると DNS 未設定の間 github.io プレビューが見られなくなるので注意。
+      # - name: Ensure CNAME (custom domain)
+      #   run: echo "plushkeys.com" > ./CNAME
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # LP はリポジトリ直下に配置 (index.html 等がルートにある)
+          path: '.'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

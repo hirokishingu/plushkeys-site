@@ -1,0 +1,90 @@
+/* Plush Keys LP — Gentle Pastel Animal School のトーン (パステル + こげ茶 + 暖色イエロー) */
+:root {
+  --cream: #FFF9F2;
+  --card: #FFFFFF;
+  --text: #4A3728;          /* こげ茶 */
+  --muted: #8A7A6B;
+  --pink: #F7B8C6;
+  --yellow: #FBBF24;
+  --sky: #BFE3F2;
+  --green: #BFE6C8;
+  --accent: #E58AA0;
+  --radius: 18px;
+  --shadow: 0 6px 20px rgba(74, 55, 40, 0.10);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, "Hiragino Maru Gothic ProN", "Hiragino Sans", "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #FFF4E8 0%, var(--cream) 40%, #F3F9FF 100%);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+/* ヘッダ / 言語トグル */
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; max-width: 880px; margin: 0 auto; }
+.brand { font-weight: 800; font-size: 20px; letter-spacing: .02em; }
+.brand .dot { color: var(--accent); }
+.langtoggle button {
+  border: 1.5px solid var(--pink); background: #fff; color: var(--text);
+  border-radius: 999px; padding: 6px 14px; font-weight: 700; font-size: 13px; cursor: pointer; margin-left: 6px;
+}
+.langtoggle button.active { background: var(--pink); }
+
+/* ヒーロー */
+.hero { text-align: center; padding: 40px 0 28px; }
+.hero .icon { width: 108px; height: 108px; border-radius: 26px; box-shadow: var(--shadow); margin-bottom: 18px; }
+.hero h1 { font-size: clamp(26px, 5vw, 40px); margin: 0 0 14px; line-height: 1.35; }
+.hero p { font-size: 17px; color: var(--text); max-width: 640px; margin: 0 auto 10px; }
+.hero .sub { color: var(--muted); font-size: 15px; }
+
+/* CTA ボタン */
+.cta-btn {
+  display: inline-block; margin-top: 18px; background: var(--text); color: #fff;
+  text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px;
+  box-shadow: var(--shadow); font-size: 16px;
+}
+.cta-btn:hover { opacity: .92; }
+
+/* セクション */
+section { padding: 26px 0; }
+h2 { font-size: clamp(22px, 4vw, 30px); text-align: center; margin: 0 0 22px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card {
+  background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+}
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+/* 保護者向け安心セクション */
+.safety { background: #FFFDF8; border-radius: var(--radius); padding: 8px 0 24px; box-shadow: var(--shadow); margin: 8px 0; }
+.safety .cards .card { background: #FBF7F0; }
+
+.cta-section { text-align: center; padding: 40px 0; }
+.cta-section p { font-size: 17px; max-width: 600px; margin: 0 auto 4px; }
+
+/* フッター */
+footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 20px 50px; }
+footer a { color: var(--accent); text-decoration: none; margin: 0 8px; font-weight: 600; }
+footer a:hover { text-decoration: underline; }
+footer .small { display: block; margin-top: 10px; font-size: 12px; }
+
+/* 法務ページ (privacy / eula) */
+.legal { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 30px; margin: 20px 0 50px; }
+.legal h1 { font-size: 26px; }
+.legal h2 { text-align: left; font-size: 19px; margin: 28px 0 8px; }
+.legal h3 { font-size: 16px; }
+.legal p, .legal li { color: var(--text); font-size: 15px; }
+.legal a { color: var(--accent); }
+.legal .eff { color: var(--muted); font-weight: 700; }
+.legal .backlink { display: inline-block; margin-bottom: 8px; font-weight: 700; color: var(--accent); text-decoration: none; }
+
+/* 言語切替表示制御 (JS あり時) */
+.lang-section { display: none; }
+.lang-section.show { display: block; }
+/* JS 無効時は両言語表示 (noscript フォールバック) */
+.no-js .lang-section { display: block; }
