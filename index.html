@@ -154,8 +154,27 @@
 </footer>
 
 <script>
+// 言語の初期表示: 手動選択(localStorage) > navigator.languages(優先順) > 英語フォールバック。
+// ja/ja-* が最優先に来れば日本語(既定=漢字)、en/en-* または他言語のみなら英語。
 (function () {
+  var STORAGE_KEY = 'plushkeys-lang';
+  var MODE = '3way'; // index: kanji / kana / en
+
+  function chooseLang(saved, languages, mode) {
+    var validKeys = (mode === '3way') ? ['kanji', 'kana', 'en'] : ['ja', 'en'];
+    if (saved && validKeys.indexOf(saved) !== -1) return saved;
+    var list = Array.isArray(languages) ? languages : [];
+    for (var i = 0; i < list.length; i++) {
+      var tag = String(list[i] || '').toLowerCase();
+      if (tag === 'ja' || tag.indexOf('ja-') === 0) return (mode === '3way') ? 'kanji' : 'ja';
+      if (tag === 'en' || tag.indexOf('en-') === 0) return 'en';
+    }
+    return 'en';
+  }
+
+  if (typeof document === 'undefined') return;
   var btns = document.querySelectorAll('.langtoggle button');
+
   function setLang(lang) {
     document.querySelectorAll('.lang-section').forEach(function (s) {
       s.classList.toggle('show', s.classList.contains('lang-' + lang));
@@ -163,9 +182,18 @@
     btns.forEach(function (b) { b.classList.toggle('active', b.dataset.lang === lang); });
     document.documentElement.lang = (lang === 'en') ? 'en' : 'ja';
   }
-  btns.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
-  // 既定は漢字。端末が英語ロケールのときだけ英語を初期表示。
-  if ((navigator.language || '').slice(0, 2) === 'en') { setLang('en'); }
+  function readSaved() { try { return window.localStorage.getItem(STORAGE_KEY); } catch (e) { return null; } }
+  function writeSaved(l) { try { window.localStorage.setItem(STORAGE_KEY, l); } catch (e) {} }
+
+  // 手動選択は記憶して次回visitで優先 (ブラウザ設定より優先)
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () { writeSaved(b.dataset.lang); setLang(b.dataset.lang); });
+  });
+
+  var langs = (navigator.languages && navigator.languages.length)
+    ? navigator.languages
+    : [navigator.language || navigator.userLanguage || ''];
+  setLang(chooseLang(readSaved(), langs, MODE));
 })();
 </script>
 

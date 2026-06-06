@@ -167,8 +167,27 @@
 </footer>
 
 <script>
+// 言語の初期表示: 手動選択(localStorage) > navigator.languages(優先順) > 英語フォールバック。
+// (index.html と同一キー plushkeys-lang を共有。3way 専用値 kanji/kana は 2way で無効化され ja に解決)
 (function () {
+  var STORAGE_KEY = 'plushkeys-lang';
+  var MODE = '2way'; // privacy / eula: ja / en
+
+  function chooseLang(saved, languages, mode) {
+    var validKeys = (mode === '3way') ? ['kanji', 'kana', 'en'] : ['ja', 'en'];
+    if (saved && validKeys.indexOf(saved) !== -1) return saved;
+    var list = Array.isArray(languages) ? languages : [];
+    for (var i = 0; i < list.length; i++) {
+      var tag = String(list[i] || '').toLowerCase();
+      if (tag === 'ja' || tag.indexOf('ja-') === 0) return (mode === '3way') ? 'kanji' : 'ja';
+      if (tag === 'en' || tag.indexOf('en-') === 0) return 'en';
+    }
+    return 'en';
+  }
+
+  if (typeof document === 'undefined') return;
   var btns = document.querySelectorAll('.langtoggle button');
+
   function setLang(lang) {
     document.querySelectorAll('.lang-section').forEach(function (s) {
       s.classList.toggle('show', s.classList.contains('lang-' + lang));
@@ -176,8 +195,17 @@
     btns.forEach(function (b) { b.classList.toggle('active', b.dataset.lang === lang); });
     document.documentElement.lang = lang;
   }
-  btns.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
-  if ((navigator.language || '').slice(0, 2) === 'en') { setLang('en'); }
+  function readSaved() { try { return window.localStorage.getItem(STORAGE_KEY); } catch (e) { return null; } }
+  function writeSaved(l) { try { window.localStorage.setItem(STORAGE_KEY, l); } catch (e) {} }
+
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () { writeSaved(b.dataset.lang); setLang(b.dataset.lang); });
+  });
+
+  var langs = (navigator.languages && navigator.languages.length)
+    ? navigator.languages
+    : [navigator.language || navigator.userLanguage || ''];
+  setLang(chooseLang(readSaved(), langs, MODE));
 })();
 </script>
 
