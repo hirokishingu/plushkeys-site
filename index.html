@@ -5,7 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Plush Keys — ふわふわ動物バンドと、はじめてのピアノ / A Cozy First Piano</title>
 <meta name="description" content="Plush Keys(プラッシュキーズ)は、やさしいパステルの動物バンドといっしょに遊ぶ、はじめてのピアノにぴったりのアプリ。楽譜が読めなくても、色と音であそぶうちにピアノがすきになる。iPhone/iPad対応・日本語/English。" />
+
+<!-- OGP / Twitter Card (plushkeys.com 移行時は og:url / og:image / twitter:image を差し替え) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Plush Keys" />
+<meta property="og:title" content="Plush Keys — ふわふわ動物バンドと、はじめてのピアノ" />
+<meta property="og:description" content="さわればすぐ鳴る、やさしいピアノアプリ。動物バンドと自由演奏、童謡からクラシックまで50曲以上。買い切りのみ・トラッキングなし。iPhone/iPad対応。" />
+<meta property="og:url" content="https://hirokishingu.github.io/plushkeys-site/" />
+<meta property="og:image" content="https://hirokishingu.github.io/plushkeys-site/assets/screenshots/og-image.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Plush Keys — ふわふわ動物バンドと、はじめてのピアノ" />
+<meta name="twitter:description" content="さわればすぐ鳴る、やさしいピアノアプリ。動物バンドと自由演奏、童謡からクラシックまで50曲以上。買い切りのみ・トラッキングなし。" />
+<meta name="twitter:image" content="https://hirokishingu.github.io/plushkeys-site/assets/screenshots/og-image.jpg" />
+
 <link rel="stylesheet" href="styles.css" />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"SoftwareApplication","name":"Plush Keys","alternateName":"プラッシュキーズ","operatingSystem":"iOS, iPadOS","applicationCategory":"EducationalApplication","description":"やさしいパステルの動物バンドといっしょに遊ぶ、はじめてのピアノアプリ。自由演奏、童謡からクラシックまで50曲以上、録音と動画づくり。買い切りのみ・トラッキングなし。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"inLanguage":["ja","en"]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"何歳から遊べますか？","acceptedAnswer":{"@type":"Answer","text":"対象年齢は4歳以上ですが、さわると音が鳴る自由演奏は2歳ごろから、指づかいガイドつきの練習モードは小学生のはじめての鍵盤練習まで、長く遊べます。"}},
+{"@type":"Question","name":"無料でどこまで遊べますか？","acceptedAnswer":{"@type":"Answer","text":"自由演奏と一部の曲は無料で遊べます。課金は買い切りの「広告なし ¥300」「プレミアム ¥600（全曲・全機能）」のみで、月額サブスクリプションはありません。"}},
+{"@type":"Question","name":"オフラインでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。演奏・録音・学習記録はすべて端末内で動くので、機内モードでも遊べます。"}},
+{"@type":"Question","name":"子どものプライバシーは大丈夫？","acceptedAnswer":{"@type":"Answer","text":"アカウント登録は不要で、データはすべて端末内に保存されます。独自の分析SDKやトラッキング(IDFA/ATT)は使用していません。広告は子ども向け設定の非パーソナライズ広告のみです。"}}
+]}]}
+</script>
 <script>document.documentElement.classList.remove('no-js');</script>
 </head>
 <body>
@@ -28,7 +54,10 @@
     <h1>ふわふわ動物バンドと、<br />はじめてのピアノ。</h1>
     <p>Plush Keys は、だれでもふれて楽しいピアノアプリ。やさしいパステルの動物たちといっしょに、自由に弾いて、お気に入りの曲を奏でられます。むずかしい設定はいりません。</p>
     <p class="sub">iPhone も iPad も横置きにすれば、画面いっぱいがステージに。気ままな自由演奏から、童謡やクラシックの名曲まで楽しめます。</p>
-    <a class="cta-btn" href="#cta-kanji">App Store で無料ダウンロード</a>
+    <div class="chips"><span class="chip">サブスクなし・買い切り</span><span class="chip">アカウント不要</span><span class="chip">トラッキングなし</span></div>
+    <a class="store-badge" href="#cta-kanji" aria-label="App Store で無料ダウンロード"><img src="assets/badge-appstore-ja.svg" alt="App Store でダウンロード" height="60" /></a>
+    <img class="hero-shot" src="assets/screenshots/hero-freeplay.jpg" alt="Plush Keys の演奏画面 — パステルの空の下、ぬいぐるみの動物バンドと大きな鍵盤" width="1600" height="736" />
+    <span class="float-note n1" aria-hidden="true">♪</span><span class="float-note n2" aria-hidden="true">♫</span><span class="float-note n3" aria-hidden="true">♪</span>
   </section>
 
   <section>
@@ -42,6 +71,15 @@
     </div>
   </section>
 
+  <section class="gallery-section">
+    <h2>画面はぜんぶ、絵本のなか</h2>
+    <div class="gallery">
+      <figure><img src="assets/screenshots/04-guideplaying.jpg" alt="曲に合わせてモード — 上から落ちてくるノートに合わせて鍵盤をタッチ" loading="lazy" width="1200" height="552" /><figcaption>おちてくるノートにあわせてタッチするだけ</figcaption></figure>
+      <figure><img src="assets/screenshots/01-startmenu.jpg" alt="ホーム画面 — 自由に・曲に合わせて・二人で・おやすみ・練習・作品の6モード" loading="lazy" width="1200" height="552" /><figcaption>自由演奏・練習・連弾・おやすみ…あそべるモードいろいろ</figcaption></figure>
+      <figure><img src="assets/screenshots/03-songlist.jpg" alt="曲リスト — ちょうちょう、きらきらぼしなどの童謡" loading="lazy" width="1200" height="552" /><figcaption>童謡からクラシックまで 50曲以上</figcaption></figure>
+    </div>
+  </section>
+
   <section class="safety">
     <h2>安心してお使いいただけます</h2>
     <div class="wrap"><div class="cards">
@@ -51,11 +89,22 @@
     </div></div>
   </section>
 
+  <section class="faq">
+    <h2>よくある質問</h2>
+    <details><summary>何歳から遊べますか？</summary><p>対象年齢は 4 歳以上ですが、さわると音が鳴る自由演奏は 2 歳ごろから。指づかいガイドつきの練習モードは、小学生のはじめての鍵盤練習まで長く使えます。</p></details>
+    <details><summary>無料でどこまで遊べますか？</summary><p>自由演奏と一部の曲は無料です。課金は買い切りの「広告なし ¥300」「プレミアム ¥600（全曲・全機能）」のみ。月額サブスクリプションはありません。</p></details>
+    <details><summary>オフラインでも使えますか？</summary><p>はい。演奏・録音・学習記録はすべて端末の中で動くので、機内モードでも遊べます。外出先や移動中でも安心です。</p></details>
+    <details><summary>子どものプライバシーは大丈夫？</summary><p>アカウント登録は不要で、データはすべて端末内に保存。独自の分析 SDK やトラッキング（IDFA/ATT）は使いません。広告は子ども向け設定の非パーソナライズ広告だけです。詳しくは<a href="privacy.html">プライバシーポリシー</a>へ。</p></details>
+  </section>
+
   <section class="cta-section" id="cta-kanji">
     <h2>さあ、動物バンドといっしょに弾いてみよう。</h2>
     <p>App Store から無料でダウンロードできます。iPhone・iPad 対応、日本語/English に対応。</p>
-    <a class="cta-btn" href="#">App Store で無料ダウンロード</a>
+    <!-- リリース後: href を App Store の製品 URL に差し替え -->
+    <a class="store-badge" href="#" aria-label="App Store で無料ダウンロード"><img src="assets/badge-appstore-ja.svg" alt="App Store でダウンロード" height="64" /></a>
   </section>
+
+  <div class="sticky-cta"><span>はじめてのピアノ、無料ではじめよう</span><a class="cta-btn small" href="#cta-kanji">ダウンロード</a></div>
 
 </div>
 </div>
@@ -69,7 +118,9 @@
     <h1>ゆびで さわると おとが なる、<br />まほうの ピアノ</h1>
     <p>うごく どうぶつ バンドと いっしょに、ドレミの せかいへ いってみよう。よみかたが まだ わからなくても だいじょうぶ。さわれば すぐ、あなたが えんそうかさん。</p>
     <p class="sub">よこむきに おいて、おおきな ステージに へんしん。すきに あそぶ じゆうえんそうから、ゆうめいな めいきょくまで、ぜんぶ ここで たのしめる。</p>
-    <a class="cta-btn" href="#cta-kana">むりょうで はじめる</a>
+    <a class="store-badge" href="#cta-kana" aria-label="むりょうで はじめる"><img src="assets/badge-appstore-ja.svg" alt="App Store で ダウンロード" height="60" /></a>
+    <img class="hero-shot" src="assets/screenshots/hero-freeplay.jpg" alt="Plush Keys の がめん — パステルの そらの したで、どうぶつ バンドと おおきな けんばん" width="1600" height="736" />
+    <span class="float-note n1" aria-hidden="true">♪</span><span class="float-note n2" aria-hidden="true">♫</span><span class="float-note n3" aria-hidden="true">♪</span>
   </section>
 
   <section>
@@ -80,6 +131,15 @@
       <div class="card"><h3>🎬 ろくおんして どうがを つくろう</h3><p>じぶんの えんそうを ろくおんして、しゃしんと いっしょに すてきな どうがに。つくった どうがは この きかいの なかと カメラロールに ほぞん。そとには おくられないから あんしんだよ。</p></div>
       <div class="card"><h3>🐻 どうぶつ バンドで きせかえ</h3><p>くまさんや うさぎさん、かわいい どうぶつ バンドの テーマを えらべるよ。けんばんの みためも きせかえ できるから、きょうの きぶんで すきな ステージに してみてね。</p></div>
       <div class="card"><h3>♬ もっと たくさん あそべる</h3><p>ゆびづかいを おしえてくれる れんしゅう モードや、リズムを とる メトロノーム。ふたりで いっしょに ならんで ひける れんだんも。がんばった きろくも のこるから、できる ことが どんどん ふえていくよ。</p></div>
+    </div>
+  </section>
+
+  <section class="gallery-section">
+    <h2>こんな がめんで あそべるよ</h2>
+    <div class="gallery">
+      <figure><img src="assets/screenshots/04-guideplaying.jpg" alt="うえから おちてくる おんぷに あわせて けんばんを タッチ" loading="lazy" width="1200" height="552" /><figcaption>おちてくる おんぷに あわせて タッチ</figcaption></figure>
+      <figure><img src="assets/screenshots/01-startmenu.jpg" alt="ホーム がめん — あそべる モードが いっぱい" loading="lazy" width="1200" height="552" /><figcaption>あそべる モードが いっぱい</figcaption></figure>
+      <figure><img src="assets/screenshots/03-songlist.jpg" alt="きょくの リスト — ちょうちょう や きらきらぼし" loading="lazy" width="1200" height="552" /><figcaption>どうよう も クラシックも ごじゅっきょく いじょう</figcaption></figure>
     </div>
   </section>
 
@@ -95,8 +155,11 @@
   <section class="cta-section" id="cta-kana">
     <h2>さあ、いっしょに えんそうしよう</h2>
     <p>App Store から むりょうで ダウンロード できます。iPhone と iPad に たいおう、にほんごと English に たいおうしています。</p>
-    <a class="cta-btn" href="#">むりょうで はじめる</a>
+    <!-- リリース後: href を App Store の製品 URL に差し替え -->
+    <a class="store-badge" href="#" aria-label="むりょうで はじめる"><img src="assets/badge-appstore-ja.svg" alt="App Store で ダウンロード" height="64" /></a>
   </section>
+
+  <div class="sticky-cta"><span>むりょうで あそべるよ</span><a class="cta-btn small" href="#cta-kana">はじめる</a></div>
 
 </div>
 </div>
@@ -110,17 +173,29 @@
     <h1>A first piano,<br />with the gentlest little animals.</h1>
     <p>No reading music. No lessons needed. Just tap along with a band of soft, pastel plush animals — and falling in love with the piano happens all on its own. Plush&nbsp;Keys: a cozy piano anyone can pick up and play.</p>
     <p class="sub">Set your phone or tablet sideways and any table becomes a stage. From free, no-wrong-notes play to nursery songs and beloved classics — it grows with you.</p>
-    <a class="cta-btn" href="#cta-en">Download on the App Store</a>
+    <div class="chips"><span class="chip">No subscriptions — one-time purchases only</span><span class="chip">No account</span><span class="chip">No tracking</span></div>
+    <a class="store-badge" href="#cta-en" aria-label="Download on the App Store"><img src="assets/badge-appstore-en.svg" alt="Download on the App Store" height="60" /></a>
+    <img class="hero-shot" src="assets/screenshots/hero-freeplay.jpg" alt="Plush Keys free play — a plush animal band on a pastel sky above a big friendly keyboard" width="1600" height="736" />
+    <span class="float-note n1" aria-hidden="true">♪</span><span class="float-note n2" aria-hidden="true">♫</span><span class="float-note n3" aria-hidden="true">♪</span>
   </section>
 
   <section>
     <h2>So many ways to play.</h2>
     <div class="cards">
       <div class="card"><h3>🎹 Free play</h3><p>Tap the big, colorful keys however you like. Every note makes the animal band bounce and cheer. There are no wrong notes — just like drawing, every tap is a little win.</p></div>
-      <div class="card"><h3>🌟 Play along &amp; sheet music</h3><p>40+ songs, from nursery tunes to classics. Match the falling color bars to the same-colored keys — no reading required. Switch on the staff view and notes on the lines become friendly and familiar.</p></div>
+      <div class="card"><h3>🌟 Play along &amp; sheet music</h3><p>50+ songs, from nursery tunes to classics. Match the falling color bars to the same-colored keys — no reading required. Switch on the staff view and notes on the lines become friendly and familiar.</p></div>
       <div class="card"><h3>🎬 Turn a performance into a video</h3><p>Record your performance and pair it with your own photos to make a keepsake video. Save it to the camera roll and share with family. Photos stay entirely on your device — nothing is uploaded anywhere.</p></div>
       <div class="card"><h3>🐻 Animal band themes</h3><p>Cat, dog, rabbit, bear, panda… a band of soft pastel animals plays right along. Dress up the theme and keyboard skins. Gentle synth tones keep little ears happy, even after a long play.</p></div>
       <div class="card"><h3>♬ More, together</h3><p>A step-by-step practice mode (finger guides + metronome), two-player duets, and progress records to celebrate every little milestone.</p></div>
+    </div>
+  </section>
+
+  <section class="gallery-section">
+    <h2>Every screen feels like a picture book.</h2>
+    <div class="gallery">
+      <figure><img src="assets/screenshots/04-guideplaying.jpg" alt="Play-along mode — tap the keys as falling color bars reach them" loading="lazy" width="1200" height="552" /><figcaption>Just tap along with the falling notes</figcaption></figure>
+      <figure><img src="assets/screenshots/01-startmenu.jpg" alt="Home screen — free play, play along, duet, sleep, practice and creations modes" loading="lazy" width="1200" height="552" /><figcaption>Free play, practice, duets, sleepy-time… so many ways to play</figcaption></figure>
+      <figure><img src="assets/screenshots/03-songlist.jpg" alt="Song list with nursery songs" loading="lazy" width="1200" height="552" /><figcaption>50+ songs, from nursery tunes to classics</figcaption></figure>
     </div>
   </section>
 
@@ -133,11 +208,22 @@
     </div></div>
   </section>
 
+  <section class="faq">
+    <h2>Frequently asked questions</h2>
+    <details><summary>What ages is it for?</summary><p>Rated 4+. Free play (tap anything, hear a friendly note) works from around age 2, while the practice mode with finger guides grows with kids into their first real keyboard lessons.</p></details>
+    <details><summary>How much can we play for free?</summary><p>Free play and a selection of songs are free. The only purchases are one-time: Remove Ads (¥300) and Premium (¥600, every song and feature). No subscriptions, ever.</p></details>
+    <details><summary>Does it work offline?</summary><p>Yes. Playing, recording, and progress records all run on the device, so it works in airplane mode — perfect for trips and waiting rooms.</p></details>
+    <details><summary>What about my child's privacy?</summary><p>No account needed; everything is stored locally on the device. We use no analytics SDK and no tracking (IDFA/ATT). Ads are non-personalized and family-friendly only. See the <a href="privacy.html">privacy policy</a>.</p></details>
+  </section>
+
   <section class="cta-section" id="cta-en">
     <h2>Your living room becomes a piano studio today.</h2>
     <p>Download Plush Keys free on the App Store. iPhone &amp; iPad, in Japanese and English. Start with free play — no pressure, just fun.</p>
-    <a class="cta-btn" href="#">Download on the App Store</a>
+    <!-- After release: replace href with the App Store product URL -->
+    <a class="store-badge" href="#" aria-label="Download on the App Store"><img src="assets/badge-appstore-en.svg" alt="Download on the App Store" height="64" /></a>
   </section>
+
+  <div class="sticky-cta"><span>A cozy first piano — free</span><a class="cta-btn small" href="#cta-en">Download</a></div>
 
 </div>
 </div>
@@ -193,6 +279,17 @@
     ? navigator.languages
     : [navigator.language || navigator.userLanguage || ''];
   setLang(chooseLang(readSaved(), langs, MODE));
+
+  // ヒーローを過ぎたらモバイル用スティッキー CTA を表示
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      document.body.classList.toggle('scrolled', window.scrollY > 480);
+      ticking = false;
+    });
+  }, { passive: true });
 })();
 </script>
 
