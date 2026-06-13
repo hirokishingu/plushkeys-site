@@ -40,4 +40,4 @@ Pages の Source は **GitHub Actions**（Settings → Pages）。
 LP の編集元は本リポジトリ（`main`）。編集して push すれば自動再デプロイ。
 （アプリ本体リポジトリ `instrument-app/site/` 側にもスナップショットがあるが、配信されるのは本リポジトリ。）
 
-連絡先: hrk.bass.526@gmail.com / AdMob publisher: pub-2624486245232885
+連絡先: hiro.apps.shoten@gmail.com / AdMob publisher: pub-2624486245232885
