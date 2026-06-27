@@ -303,6 +303,14 @@
       <li class="pk-stat pk-stat-free"><span class="pk-stat-n" data-stat="free-n">¥0</span><span class="pk-stat-l" data-stat="free-l">ではじめる</span></li>
     </ul>
 
+    <!-- 作曲家フェイスウォール: 顔タップ→その作曲家の曲に絞り込み(composers.jsが描画) -->
+    <div id="pk-facewall" class="pk-facewall-block">
+      <h3 class="pk-facewall-title">この子たちの名曲、ぜんぶ入ってます</h3>
+      <p class="pk-facewall-lead">気になる顔をタップすると、その作曲家の曲がすっと並びます。</p>
+      <div class="pk-facechip" role="status" aria-live="polite" hidden></div>
+      <div class="pk-faces" role="group" aria-label="作曲家でしぼりこむ"></div>
+    </div>
+
     <div class="pk-scene-block">
       <h3 class="pk-scene-title" data-i18n="sceneTitle">こんな日に、この曲</h3>
       <div class="pk-scenes" role="group" aria-label="シーン別おすすめ"></div>
@@ -414,6 +422,7 @@
 
 <!-- 収録曲ショーケース(データ駆動) + 追加アニメーション -->
 <script src="showcase.js"></script>
+<script src="composers.js"></script>
 <script src="animations.js"></script>
 <script>
 // App Store 公開後にこの 1 行だけ書き換える: 例 'https://apps.apple.com/app/idXXXXXXXXX'

@@ -419,3 +419,195 @@ body.scrolled .lang-section.show .sticky-cta {
   .hero-shot.pk-shot-in { animation: none !important; opacity: 1 !important; transform: rotate(-1.2deg) !important; }
   .pk-fallnote { animation: none !important; display: none !important; }
 }
+
+/* ===== 作曲家フェイスウォール ===== */
+/* =====================================================================
+ * Plush Keys LP — 作曲家フェイスウォール (Composer Face Wall) スタイル
+ * 既存 styles.css の :root 変数(--cream/--card/--text/--muted/--pink/
+ * --yellow/--sky/--green/--accent/--radius/--shadow)のみ再利用。新規変数なし。
+ * すべて pk-face* / pk-facewall* / pk-facechip* 接頭辞で既存と衝突しない。
+ *
+ * レイアウト方針:
+ *  - モバイル: 横スクロール「顔の川」(scroll-snap + 端フェードマスク)。
+ *    高さ統一(サイズ2段階は使わない)で雑然化を防ぐ。
+ *  - 640px+: flex-wrap の中央寄せグリッド。ここで .pk-face-lg の大小ヒエラルキー
+ *    (主力作曲家=大)を効かせる。
+ * ===================================================================== */
+
+.pk-facewall-block { margin: 26px 0 10px; }
+.pk-facewall-title { text-align: center; font-size: 18px; margin: 0 0 6px; color: var(--text); }
+.pk-facewall-lead { text-align: center; color: var(--muted); font-size: 13.5px; margin: 0 auto 12px; max-width: 560px; }
+
+/* ---- 選択中チップ「ショパンの曲 15曲 ✕」 ---- */
+.pk-facechip {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 0 auto 14px; padding: 5px 6px 5px 14px;
+  background: var(--accent); color: #fff; border-radius: 999px;
+  box-shadow: var(--shadow); font-weight: 800; font-size: 13px;
+  position: relative; left: 50%; transform: translateX(-50%);
+}
+.pk-facechip[hidden] { display: none; }
+.pk-facechip-text { line-height: 1.2; white-space: nowrap; }
+.pk-facechip-clear {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border: 0; border-radius: 50%;
+  background: rgba(255,255,255,.28); color: #fff; cursor: pointer;
+  font: inherit; font-size: 12px; font-weight: 800; line-height: 1;
+}
+.pk-facechip-clear:hover { background: rgba(255,255,255,.45); }
+.pk-facechip-clear:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+
+/* ---- 顔の壁(コンテナ) ----
+ * モバイル: 横スクロール。端フェードで「まだ続く」感→スワイプ誘発。 */
+.pk-faces {
+  display: flex; gap: 12px;
+  overflow-x: auto; padding: 8px 14px 14px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* 端フェードマスク(装飾・静的)。reduced-motion でも維持(モーションではない)。 */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+}
+/* 640px+: 折り返し中央寄せグリッドに切替。マスク不要。 */
+@media (min-width: 640px) {
+  .pk-faces {
+    flex-wrap: wrap; justify-content: center;
+    overflow-x: visible; padding: 8px 0 14px;
+    -webkit-mask-image: none; mask-image: none;
+    max-width: 820px; margin: 0 auto;
+  }
+}
+
+/* ---- 顔タイル(ボタン) ---- */
+.pk-face {
+  flex: 0 0 auto; scroll-snap-align: start;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  width: 92px; padding: 0; border: 0; background: transparent;
+  cursor: pointer; color: var(--text); font: inherit;
+  position: relative;
+}
+.pk-face:focus { outline: none; }
+.pk-face:focus-visible .pk-face-img,
+.pk-face:focus-visible .pk-face-all-ic { outline: 3px solid var(--sky); outline-offset: 3px; }
+
+.pk-face-img {
+  width: 76px; height: 76px; display: block; border-radius: 50%;
+  /* 似顔絵PNGは既にクリーム円フレーム入り。枠は薄い白リングで「シール」感のみ。 */
+  background: var(--cream);
+  box-shadow: var(--shadow);
+  border: 2.5px solid #fff;
+  transition: box-shadow .18s ease, border-color .18s ease;
+}
+.pk-face-name {
+  font-size: 11.5px; font-weight: 700; line-height: 1.2; text-align: center;
+  color: var(--text); max-width: 92px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* 曲数バッジ(右下シール) */
+.pk-face-badge {
+  position: absolute; top: 2px; right: 6px;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent); color: #fff; border: 2px solid var(--cream);
+  border-radius: 999px; font-size: 10.5px; font-weight: 800; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 6px rgba(74,55,40,.18);
+}
+
+/* 640px+ のみ大小ヒエラルキー(主力 n>=5 を大きく) */
+@media (min-width: 640px) {
+  .pk-face-lg { width: 108px; }
+  .pk-face-lg .pk-face-img { width: 92px; height: 92px; }
+  .pk-face-lg .pk-face-name { max-width: 108px; font-size: 12.5px; }
+}
+
+/* 選択中: 枠を accent リング + 影強調(レイアウト不動・色/影のみ) */
+.pk-face.is-active .pk-face-img {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(229,138,160,.30), 0 10px 22px rgba(74,55,40,.18);
+}
+.pk-face.is-active .pk-face-name { color: var(--accent); }
+
+/* ---- 先頭「ぜんぶ」タイル ---- */
+.pk-face-all .pk-face-all-ic {
+  width: 76px; height: 76px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--yellow); color: #fff; font-size: 30px; font-weight: 800;
+  border: 2.5px solid #fff; box-shadow: var(--shadow);
+}
+@media (min-width: 640px) {
+  /* グリッドでも「ぜんぶ」は標準サイズで先頭に置く */
+  .pk-face-all { width: 92px; }
+}
+
+/* hover/tap/focus: ぴょこっと跳ねる(transform のみ)。タッチ端末では :active で。
+   実体は animations-add.css 側に集約(ここはレイアウトのみ)。 */
+
+/* ===== フェイスウォール 追加アニメ ===== */
+/* =====================================================================
+ * Plush Keys LP — 作曲家フェイスウォール 追加アニメーション
+ * すべて transform / opacity のみ(レイアウト非破壊・GPU安価)。
+ * prefers-reduced-motion: reduce で完全停止(最終状態を即適用)。
+ * 既存 animations 規律(--i stagger / hover:hover / reduced-motion 停止)を踏襲。
+ * このブロックは styles.css 末尾 or animations 用 CSS に追記する想定。
+ * ===================================================================== */
+
+/* ---- 顔タイルの初回 stagger フェードイン ----
+ * composers.js が .pk-face-stagger と --i (0..20) を付与。
+ * 既存 .pk-stagger と同型だが、顔サイズに合わせ translateY を少し大きめに。 */
+.pk-face-stagger {
+  animation: pkFaceIn .36s ease both;
+  animation-delay: calc(var(--i, 0) * 20ms);
+}
+@keyframes pkFaceIn {
+  from { opacity: 0; transform: translateY(10px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---- hover/focus で「ぴょこっ」と跳ねる(似顔絵だけ動かす) ----
+ * ポインタ端末のみ。タップ端末は :active で一瞬沈む。 */
+@media (hover: hover) {
+  .pk-face .pk-face-img,
+  .pk-face .pk-face-all-ic {
+    transition: transform .15s ease-out, box-shadow .18s ease, border-color .18s ease;
+  }
+  .pk-face:hover .pk-face-img,
+  .pk-face:hover .pk-face-all-ic,
+  .pk-face:focus-visible .pk-face-img,
+  .pk-face:focus-visible .pk-face-all-ic {
+    transform: translateY(-4px) scale(1.04);
+  }
+}
+/* タップ時の触覚的フィードバック(全端末) */
+.pk-face:active .pk-face-img,
+.pk-face:active .pk-face-all-ic {
+  transform: translateY(-1px) scale(.98);
+  transition: transform .08s ease-out;
+}
+
+/* ---- 選択チップの出現(下からふわっと・固定要素なのでレイアウト不動) ---- */
+.pk-facechip:not([hidden]) {
+  animation: pkChipPop .2s ease both;
+}
+@keyframes pkChipPop {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* =====================================================================
+ * reduced-motion: すべて停止し、最終状態を即適用
+ * (横スクロール自体は残すが、snap と端フェードマスクは静的なので可)
+ * ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .pk-face-stagger { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .pk-face:hover .pk-face-img,
+  .pk-face:hover .pk-face-all-ic,
+  .pk-face:focus-visible .pk-face-img,
+  .pk-face:focus-visible .pk-face-all-ic,
+  .pk-face:active .pk-face-img,
+  .pk-face:active .pk-face-all-ic { transform: none !important; }
+  .pk-face .pk-face-img,
+  .pk-face .pk-face-all-ic { transition: none !important; }
+  .pk-facechip:not([hidden]) { animation: none !important; }
+}

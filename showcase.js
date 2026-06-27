@@ -104,6 +104,8 @@
   var activeCat = 'all';
   var query = '';
   var activeScene = null;      // scene key or null
+  var activeComposer = null;   // 該当作曲家の cj 配列 or null (フェイスウォール用)
+  var composerClearedCbs = []; // composer 解除時に呼ぶコールバック
   var shown = 0;               // 現在描画している件数
   var PAGE = 40;               // 初期/追加描画件数
   var reduce = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -132,6 +134,7 @@
       if (sc) sceneIds = sc.ids;
     }
     return SONGS.filter(function (s) {
+      if (activeComposer) { if (activeComposer.indexOf(s.cj) === -1) return false; }
       if (sceneIds) { if (sceneIds.indexOf(s.id) === -1) return false; }
       else {
         if (activeCat !== 'all' && s.cat !== activeCat) return false;
@@ -284,8 +287,16 @@
     io.observe(statEls.nSongs);
   }
 
+  // ---- composer(フェイスウォール) 解除ヘルパ ----
+  function clearComposer() {
+    if (activeComposer == null) return;
+    activeComposer = null;
+    composerClearedCbs.forEach(function (fn) { try { fn(); } catch (e) {} });
+  }
+
   // ---- ピル/シーンの active 状態切替 ----
   function setActiveCat(cat) {
+    clearComposer();
     activeCat = cat; activeScene = null; query = elSearch.value;
     elPills.querySelectorAll('.pk-pill').forEach(function (b) {
       var on = b.getAttribute('data-cat') === cat;
@@ -298,6 +309,7 @@
     refilter();
   }
   function setActiveScene(scene) {
+    clearComposer();
     if (activeScene === scene) { setActiveCat('all'); elSearch.value = ''; query = ''; refilter(); return; }
     activeScene = scene; activeCat = 'all'; query = ''; elSearch.value = '';
     elScenes.querySelectorAll('.pk-scene').forEach(function (b) {
@@ -384,9 +396,10 @@
     // 検索 (IME 考慮で input イベント)
     var composing = false;
     elSearch.addEventListener('compositionstart', function () { composing = true; });
-    elSearch.addEventListener('compositionend', function () { composing = false; query = elSearch.value; activeScene = null; refilter(); });
+    elSearch.addEventListener('compositionend', function () { composing = false; clearComposer(); query = elSearch.value; activeScene = null; refilter(); });
     elSearch.addEventListener('input', function () {
       if (composing) return;
+      clearComposer();
       query = elSearch.value; activeScene = null;
       // 検索開始したらシーン選択は解除
       elScenes.querySelectorAll('.pk-scene').forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
@@ -422,7 +435,26 @@
   }
 
   // 公開API
-  window.PKShowcase = { setLang: setLang, init: init };
+  function filterByComposer(jaNames) {
+    if (!jaNames) { activeComposer = null; }
+    else {
+      activeComposer = jaNames.slice();
+      activeScene = null; activeCat = 'all'; query = ''; if (elSearch) elSearch.value = '';
+      elPills.querySelectorAll('.pk-pill').forEach(function (b) {
+        var on = b.getAttribute('data-cat') === 'all';
+        b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      elScenes.querySelectorAll('.pk-scene').forEach(function (b) {
+        b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false');
+      });
+    }
+    refilter();
+  }
+  window.PKShowcase = {
+    setLang: setLang, init: init,
+    filterByComposer: filterByComposer,
+    onComposerCleared: function (fn) { if (typeof fn === 'function') composerClearedCbs.push(fn); }
+  };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
