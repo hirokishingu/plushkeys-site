@@ -4,11 +4,14 @@
   --card: #FFFFFF;
   --text: #4A3728;          /* こげ茶 */
   --muted: #8A7A6B;
+  --text-muted: #6F5F52;
   --pink: #F7B8C6;
   --yellow: #FBBF24;
   --sky: #BFE3F2;
   --green: #BFE6C8;
   --accent: #E58AA0;
+  --text-accent: #A43D5A;
+  --focus: #34708F;
   --radius: 18px;
   --shadow: 0 6px 20px rgba(74, 55, 40, 0.10);
 }
@@ -40,7 +43,7 @@ body {
 .hero .icon { width: 108px; height: 108px; border-radius: 26px; box-shadow: var(--shadow); margin-bottom: 18px; }
 .hero h1 { font-size: clamp(26px, 5vw, 40px); margin: 0 0 14px; line-height: 1.35; }
 .hero p { font-size: 17px; color: var(--text); max-width: 640px; margin: 0 auto 10px; }
-.hero .sub { color: var(--muted); font-size: 15px; }
+.hero .sub { color: var(--text-muted); font-size: 15px; }
 
 /* CTA ボタン */
 .cta-btn {
@@ -58,7 +61,7 @@ h2 { font-size: clamp(22px, 4vw, 30px); text-align: center; margin: 0 0 22px; }
   background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
 }
 .card h3 { margin: 0 0 8px; font-size: 18px; }
-.card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.card p { margin: 0; color: var(--text-muted); font-size: 14.5px; }
 
 /* 保護者向け安心セクション */
 .safety { background: #FFFDF8; border-radius: var(--radius); padding: 8px 0 24px; box-shadow: var(--shadow); margin: 8px 0; }
@@ -68,8 +71,8 @@ h2 { font-size: clamp(22px, 4vw, 30px); text-align: center; margin: 0 0 22px; }
 .cta-section p { font-size: 17px; max-width: 600px; margin: 0 auto 4px; }
 
 /* フッター */
-footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 20px 50px; }
-footer a { color: var(--accent); text-decoration: none; margin: 0 8px; font-weight: 600; }
+footer { text-align: center; color: var(--text-muted); font-size: 13px; padding: 30px 20px 50px; }
+footer a { color: var(--text-accent); text-decoration: none; margin: 0 8px; font-weight: 600; }
 footer a:hover { text-decoration: underline; }
 footer .small { display: block; margin-top: 10px; font-size: 12px; }
 
@@ -79,9 +82,9 @@ footer .small { display: block; margin-top: 10px; font-size: 12px; }
 .legal h2 { text-align: left; font-size: 19px; margin: 28px 0 8px; }
 .legal h3 { font-size: 16px; }
 .legal p, .legal li { color: var(--text); font-size: 15px; }
-.legal a { color: var(--accent); }
-.legal .eff { color: var(--muted); font-weight: 700; }
-.legal .backlink { display: inline-block; margin-bottom: 8px; font-weight: 700; color: var(--accent); text-decoration: none; }
+.legal a { color: var(--text-accent); }
+.legal .eff { color: var(--text-muted); font-weight: 700; }
+.legal .backlink { display: inline-block; margin-bottom: 8px; font-weight: 700; color: var(--text-accent); text-decoration: none; }
 
 /* ヒーロー: バッジ・チップ・スクリーンショット・浮遊音符 */
 .hero { position: relative; }
@@ -121,10 +124,10 @@ footer .small { display: block; margin-top: 10px; font-size: 12px; }
   width: 100%; height: auto; border-radius: 16px; border: 4px solid #fff;
   box-shadow: var(--shadow); display: block;
 }
-.gallery figcaption { font-size: 13.5px; color: var(--muted); text-align: center; margin-top: 8px; font-weight: 600; }
+.gallery figcaption { font-size: 13.5px; color: var(--text-muted); text-align: center; margin-top: 8px; font-weight: 600; }
 
 /* 収録曲チップ */
-.lead { text-align: center; color: var(--muted); font-size: 15px; max-width: 640px; margin: -10px auto 18px; }
+.lead { text-align: center; color: var(--text-muted); font-size: 15px; max-width: 640px; margin: -10px auto 18px; }
 .songchips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 720px; margin: 0 auto; }
 .songchips span {
   background: var(--card); border: 1.5px solid var(--sky); border-radius: 999px;
@@ -149,8 +152,8 @@ footer .small { display: block; margin-top: 10px; font-size: 12px; }
 /* FAQ */
 .faq details { background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 14px 18px; margin: 10px 0; }
 .faq summary { font-weight: 700; cursor: pointer; font-size: 15.5px; }
-.faq p { color: var(--muted); font-size: 14.5px; margin: 10px 0 2px; }
-.faq a { color: var(--accent); }
+.faq p { color: var(--text-muted); font-size: 14.5px; margin: 10px 0 2px; }
+.faq a { color: var(--text-accent); }
 
 /* モバイル用スティッキー CTA (ヒーロー通過後に表示) */
 .sticky-cta {
@@ -201,7 +204,7 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
   font-size: clamp(26px, 7vw, 38px); line-height: 1.05;
   font-variant-numeric: tabular-nums;
 }
-.pk-stat-l { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.pk-stat-l { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-top: 4px; }
 
 @media (max-width: 480px) {
   .pk-stats { grid-template-columns: repeat(2, 1fr); }
@@ -227,7 +230,7 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
 .pk-scene-emoji { font-size: 22px; line-height: 1; }
 .pk-scene-label { font-size: 12.5px; font-weight: 700; white-space: nowrap; }
 .pk-scene.is-active { background: var(--pink); border-color: var(--accent); }
-.pk-scene:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.pk-scene:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 /* ---- ファインダー: 検索 + ピル ---- */
 .pk-finder { max-width: 720px; margin: 18px auto 0; }
@@ -241,7 +244,7 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
   flex: 1; border: 0; background: transparent; color: var(--text);
   font: inherit; font-size: 15px; padding: 8px 0; min-width: 0;
 }
-.pk-search-input::placeholder { color: var(--muted); opacity: .85; }
+.pk-search-input::placeholder { color: var(--text-muted); opacity: 1; }
 .pk-search-input:focus { outline: none; }
 .pk-search:focus-within { border-color: var(--accent); }
 
@@ -255,7 +258,7 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
   color: var(--text); font: inherit; font-size: 13.5px; font-weight: 700;
 }
 .pk-pill-count {
-  font-size: 11px; font-weight: 800; color: var(--muted);
+  font-size: 11px; font-weight: 800; color: var(--text-muted);
   background: var(--cream); border-radius: 999px; padding: 1px 7px;
   font-variant-numeric: tabular-nums;
 }
@@ -266,9 +269,9 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
 .pk-pill.pk-cat-accent.is-active { background: var(--accent); color: #fff; }
 .pk-pill.pk-cat-accent.is-active .pk-pill-count { color: var(--text); }
 .pk-pill.pk-cat-yellow.is-active { background: var(--yellow); }
-.pk-pill:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.pk-pill:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-.pk-count { text-align: center; color: var(--muted); font-size: 13px; font-weight: 700; margin: 4px 0 16px; }
+.pk-count { text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; margin: 4px 0 16px; }
 
 /* ---- 曲チップグリッド ---- */
 .pk-grid {
@@ -282,7 +285,7 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
 }
 .pk-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sky); flex: 0 0 auto; }
 .pk-songname { font-size: 13.5px; font-weight: 600; color: var(--text); }
-.pk-composer { font-size: 11px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.pk-composer { font-size: 11px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
 
 /* カテゴリ色をドット/枠に反映 */
 .pk-cat-sky    .pk-dot, .pk-cat-sky.pk-songchip    { }
@@ -303,16 +306,16 @@ body.scrolled .lang-section.show .sticky-cta { display: flex; }
 /* ---- もっと見る ---- */
 .pk-more {
   display: block; margin: 18px auto 0; cursor: pointer;
-  background: #fff; border: 1.5px solid var(--accent); color: var(--accent);
+  background: #fff; border: 1.5px solid var(--accent); color: var(--text-accent);
   border-radius: 999px; padding: 10px 24px; font: inherit; font-weight: 800; font-size: 14px;
   box-shadow: var(--shadow);
 }
 .pk-more:hover { background: var(--accent); color: #fff; }
-.pk-more:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.pk-more:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 /* ---- 空状態 ---- */
 .pk-empty { text-align: center; padding: 24px 12px 8px; }
-.pk-empty-text { color: var(--muted); font-size: 15px; margin: 0 0 14px; }
+.pk-empty-text { color: var(--text-muted); font-size: 15px; margin: 0 0 14px; }
 
 /* ---- ファインダー直後CTA ---- */
 .pk-finder-cta { text-align: center; margin-top: 26px; }
@@ -436,7 +439,7 @@ body.scrolled .lang-section.show .sticky-cta {
 
 .pk-facewall-block { margin: 26px 0 10px; }
 .pk-facewall-title { text-align: center; font-size: 18px; margin: 0 0 6px; color: var(--text); }
-.pk-facewall-lead { text-align: center; color: var(--muted); font-size: 13.5px; margin: 0 auto 12px; max-width: 560px; }
+.pk-facewall-lead { text-align: center; color: var(--text-muted); font-size: 13.5px; margin: 0 auto 12px; max-width: 560px; }
 
 /* ---- 選択中チップ「ショパンの曲 15曲 ✕」 ---- */
 .pk-facechip {
@@ -455,7 +458,7 @@ body.scrolled .lang-section.show .sticky-cta {
   font: inherit; font-size: 12px; font-weight: 800; line-height: 1;
 }
 .pk-facechip-clear:hover { background: rgba(255,255,255,.45); }
-.pk-facechip-clear:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.pk-facechip-clear:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 /* ---- 顔の壁(コンテナ) ----
  * モバイル: 横スクロール。端フェードで「まだ続く」感→スワイプ誘発。 */
@@ -488,7 +491,7 @@ body.scrolled .lang-section.show .sticky-cta {
 }
 .pk-face:focus { outline: none; }
 .pk-face:focus-visible .pk-face-img,
-.pk-face:focus-visible .pk-face-all-ic { outline: 3px solid var(--sky); outline-offset: 3px; }
+.pk-face:focus-visible .pk-face-all-ic { outline: 3px solid var(--focus); outline-offset: 3px; }
 
 .pk-face-img {
   width: 76px; height: 76px; display: block; border-radius: 50%;
@@ -527,7 +530,7 @@ body.scrolled .lang-section.show .sticky-cta {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(229,138,160,.30), 0 10px 22px rgba(74,55,40,.18);
 }
-.pk-face.is-active .pk-face-name { color: var(--accent); }
+.pk-face.is-active .pk-face-name { color: var(--text-accent); }
 
 /* ---- 先頭「ぜんぶ」タイル ---- */
 .pk-face-all .pk-face-all-ic {
