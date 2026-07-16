@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Plush Keys — ふわふわ動物バンドと、はじめてのピアノ / A Cozy First Piano</title>
 <meta name="description" content="Plush Keys(プラッシュキーズ)は、やさしいパステルの動物バンドといっしょに遊ぶ、はじめてのピアノにぴったりのアプリ。楽譜が読めなくても、色と音であそぶうちにピアノがすきになる。iPhone/iPad対応・日本語/English。" />
+<meta name="apple-itunes-app" content="app-id=6780288745" />
 
 <!-- OGP / Twitter Card (plushkeys.com 移行時は og:url / og:image / twitter:image を差し替え) -->
 <meta property="og:type" content="website" />
@@ -24,7 +25,7 @@
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"SoftwareApplication","name":"Plush Keys","alternateName":"プラッシュキーズ","operatingSystem":"iOS, iPadOS","applicationCategory":"EducationalApplication","description":"やさしいパステルの動物バンドといっしょに遊ぶ、はじめてのピアノアプリ。自由演奏、童謡からクラシックまで131曲、録音と動画づくり。買い切りのみ・トラッキングなし。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"inLanguage":["ja","en"]},
+{"@type":"SoftwareApplication","name":"Plush Keys","alternateName":"プラッシュキーズ","url":"https://hirokishingu.github.io/plushkeys-site/","installUrl":"https://apps.apple.com/jp/app/plush-keys/id6780288745","operatingSystem":"iOS, iPadOS","applicationCategory":"EducationalApplication","description":"やさしいパステルの動物バンドといっしょに遊ぶ、はじめてのピアノアプリ。自由演奏、童謡からクラシックまで131曲、録音と動画づくり。買い切りのみ・トラッキングなし。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"inLanguage":["ja","en"]},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"何歳から遊べますか？","acceptedAnswer":{"@type":"Answer","text":"対象年齢は4歳以上ですが、さわると音が鳴る自由演奏は2歳ごろから、指づかいガイドつきの練習モードは小学生のはじめての鍵盤練習まで、長く遊べます。"}},
 {"@type":"Question","name":"無料でどこまで遊べますか？","acceptedAnswer":{"@type":"Answer","text":"自由演奏と一部の曲は無料で遊べます。課金は買い切りの「広告なし ¥300」「プレミアム ¥600（全曲・全機能）」のみで、月額サブスクリプションはありません。"}},
@@ -120,7 +121,6 @@
   <section class="cta-section" id="cta-kanji">
     <h2>さあ、動物バンドといっしょに弾いてみよう。</h2>
     <p>App Store から無料でダウンロードできます。iPhone・iPad 対応、日本語/English に対応。</p>
-    <!-- リリース後: href を App Store の製品 URL に差し替え -->
     <a class="store-badge" data-pk-store href="#" aria-label="App Store で無料ダウンロード"><img src="assets/badge-appstore-ja.svg" alt="App Store でダウンロード" height="64" /></a>
   </section>
 
@@ -195,7 +195,6 @@
   <section class="cta-section" id="cta-kana">
     <h2>さあ、いっしょに えんそうしよう</h2>
     <p>App Store から むりょうで ダウンロード できます。iPhone と iPad に たいおう、にほんごと English に たいおうしています。</p>
-    <!-- リリース後: href を App Store の製品 URL に差し替え -->
     <a class="store-badge" data-pk-store href="#" aria-label="むりょうで はじめる"><img src="assets/badge-appstore-ja.svg" alt="App Store で ダウンロード" height="64" /></a>
   </section>
 
@@ -279,7 +278,6 @@
   <section class="cta-section" id="cta-en">
     <h2>Your living room becomes a piano studio today.</h2>
     <p>Download Plush Keys free on the App Store. iPhone &amp; iPad, in Japanese and English. Start with free play — no pressure, just fun.</p>
-    <!-- After release: replace href with the App Store product URL -->
     <a class="store-badge" data-pk-store href="#" aria-label="Download on the App Store"><img src="assets/badge-appstore-en.svg" alt="Download on the App Store" height="64" /></a>
   </section>
 
@@ -425,10 +423,8 @@
 <script src="composers.js"></script>
 <script src="animations.js"></script>
 <script>
-// App Store 公開後にこの 1 行だけ書き換える: 例 'https://apps.apple.com/app/idXXXXXXXXX'
 (function () {
-  var STORE_URL = null;
-  if (!STORE_URL) return; // 未公開中は既存の href を維持(挙動を変えない)
+  var STORE_URL = 'https://apps.apple.com/jp/app/plush-keys/id6780288745';
   document.querySelectorAll('[data-pk-store]').forEach(function (a) {
     a.setAttribute('href', STORE_URL);
     a.removeAttribute('aria-disabled');

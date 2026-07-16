@@ -22,6 +22,7 @@
 Pages の Source は **GitHub Actions**（Settings → Pages）。
 
 - 暫定 URL: `https://hirokishingu.github.io/plushkeys-site/`
+- App Store: `https://apps.apple.com/jp/app/plush-keys/id6780288745`
 
 ## 独自ドメイン plushkeys.com を有効化する手順 (DNS 設定後)
 
