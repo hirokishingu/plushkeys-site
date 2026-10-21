@@ -1,123 +1,66 @@
 #!/usr/bin/env python3
-"""曲ごとのページ (songs/*.html)、曲の一覧 (songs/index.html)、sitemap.xml を作る (2026-10-21)。
+"""曲ごとのページ (日本語 songs/*.html・英語 en/songs/*.html)、それぞれの一覧、sitemap.xml を作る (2026-10-21)。
 
     python3 tools/build_song_pages.py
 
 ねらい: 「曲名 ドレミ」「曲名 簡単」「楽譜なし」で調べた人に、最初のメロディのドレミと、
-Plush Keys での弾き方を届ける。ドレミはアプリ (instrument-app) の曲データから出したもの
+Plush Keys での弾き方を届ける。英語のページは「<曲名> piano letter notes」で調べた人に、同じメロディを
+音名 (C D E…) で届ける。ドレミはアプリ (instrument-app) の曲データから出したもの
 (Plush Keys の編曲の音。原曲から調を移した曲はそう書く)。
-アプリに無い機能や、まだ公開していない版の機能は書かない。曲を足すときは SONGS に足して実行する。
+アプリに無い機能や、まだ公開していない版の機能は書かない。曲を足すときは tools/song_pages_data.py に足して実行する。
 """
 import html
 import json
+import sys
 from datetime import date
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from song_pages_data import SONGS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = "https://hirokishingu.github.io/plushkeys-site/"
 STORE = "https://apps.apple.com/jp/app/plush-keys/id6780288745"
+STORE_EN = "https://apps.apple.com/us/app/plush-keys/id6780288745"
 TODAY = date.today().isoformat()
-# アプリの曲数 (日本語の一覧)。アプリの版を上げて曲数が変わったら直す。
+# アプリの曲数 (日本語の一覧 / 英語の一覧)。アプリの版を上げて曲数が変わったら直す。
 APP_SONG_COUNT = 192
+APP_SONG_COUNT_EN = 175
+# 米国のプレミアムの価格 (英語のページに書く)。App Store Connect で変えたら直す。
+PRICE_US = "$3.99"
 
-# chunks: ドレミを何音ずつ改行するか。free: 無料で弾けるか (False = プレミアム)。
-# long: ロング版があるか ("free" / "premium" / None)。transposed: アプリの編曲で調を移しているか。
-SONGS = [
-    {"slug": "fur-elise", "title": "エリーゼのために", "search": "エリーゼ", "composer": "ベートーヴェン",
-     "image": "composer_beethoven.png", "free": True, "long": "premium", "transposed": False,
-     "doremi": "ミ レ♯ ミ レ♯ ミ シ レ ド ラ ド ミ ラ シ ミ ソ♯ シ ド ミ ミ レ♯ ミ レ♯ ミ シ", "chunks": [9, 4, 4, 7],
-     "about": ["ベートーヴェンが1810年ごろに書いたピアノの小品です（WoO 59）。ベートーヴェンの死後、1867年に出版されて知られるようになりました。",
-               "題名の「エリーゼ」がだれなのかは、今もはっきりしていません。冒頭の「ミ レ♯ ミ レ♯」と行き来するメロディは、誰もが一度は聞いたことのあるフレーズです。"],
-     "tip": "最初の「ミ レ♯ ミ レ♯ ミ」は、となりどうしの白鍵と黒鍵を行き来するだけ。ここを何度かくり返すと、すぐに指が覚えます。"},
-    {"slug": "canon", "title": "カノン", "search": "カノン", "composer": "パッヘルベル",
-     "image": "composer_pachelbel.png", "free": True, "long": "premium", "transposed": True,
-     "doremi": "ミ レ ド シ ラ ソ ラ シ ド シ ラ ソ ファ ミ ファ レ", "chunks": [8, 8],
-     "about": ["ドイツの作曲家パッヘルベル（1653〜1706年）の「カノンとジーグ」の前半です。同じメロディを少しずつ遅れて重ねていく「カノン」という書き方で作られています。",
-               "原曲はニ長調。結婚式や卒業式でもよく使われる、ゆったりとした曲です。"],
-     "tip": "Plush Keys ではハ長調に移しているので、白鍵だけで弾けます。「ミ レ ド シ ラ ソ ラ シ」と、階段を下りるように進むところから始めましょう。"},
-    {"slug": "turkish-march", "title": "トルコ行進曲", "search": "トルコ", "composer": "モーツァルト",
-     "image": "composer_mozart.png", "free": True, "long": "premium", "transposed": False,
-     "doremi": "シ ラ ソ♯ ラ ド レ ド シ ド ミ ファ ミ レ♯ ミ シ ラ ソ♯ ラ シ ラ ソ♯ ラ ド ラ", "chunks": [5, 5, 8, 6],
-     "about": ["モーツァルトのピアノソナタ第11番 イ長調 K.331 の第3楽章です。楽譜に「トルコ風に」と書かれていて、当時ヨーロッパで人気だったトルコの軍楽隊の響きをまねています。",
-               "細かい音が続くので速く感じますが、最初は「シ ラ ソ♯ ラ ド」の5つの音のまとまりで覚えると弾きやすくなります。"],
-     "tip": "「シ ラ ソ♯ ラ ド」「レ ド シ ド ミ」と、同じ形が少しずつ上がっていきます。まずはゆっくり、まとまりごとに。"},
-    {"slug": "ode-to-joy", "title": "第九（喜びの歌）", "search": "第九", "composer": "ベートーヴェン",
-     "image": "composer_beethoven.png", "free": True, "long": "premium", "transposed": True,
-     "doremi": "ミ ミ ファ ソ ソ ファ ミ レ ド ド レ ミ ミ レ レ", "chunks": [4, 4, 4, 3],
-     "about": ["ベートーヴェンの交響曲第9番 ニ短調 作品125（1824年初演）の第4楽章で歌われるメロディです。歌詞はシラーの詩「歓喜に寄す」から取られています。",
-               "日本では年末の「第九」として親しまれています。となりの音へ一歩ずつ進むメロディなので、はじめての1曲にもぴったりです。"],
-     "tip": "白鍵だけで弾けます。「ミ ミ ファ ソ」「ソ ファ ミ レ」と、上がって下がる形を4つの音ずつ。"},
-    {"slug": "minuet-in-g", "title": "メヌエット ト長調", "search": "メヌエット", "composer": "ペツォールト（バッハの曲集より）",
-     "image": "composer_bach.png", "free": True, "long": "premium", "transposed": False,
-     "doremi": "レ ソ ラ シ ド レ ソ ソ ミ ド レ ミ ファ♯ ソ ソ ソ", "chunks": [8, 8],
-     "about": ["「アンナ・マグダレーナ・バッハのための音楽帳」（1725年）に収められている曲です。長いあいだバッハの作品とされてきましたが、今はクリスティアン・ペツォールトの作とされています。",
-               "ピアノの発表会でもよく弾かれる、3拍子のおどりの曲です。"],
-     "tip": "黒鍵は「ファ♯」だけ。「レ ソラシド レ ソ ソ」のリズムを口ずさみながら弾くと覚えやすくなります。"},
-    {"slug": "twinkle-twinkle", "title": "きらきら星", "search": "きらきらぼし", "composer": "フランスの歌",
-     "image": None, "free": True, "long": None, "transposed": False,
-     "doremi": "ド ド ソ ソ ラ ラ ソ ファ ファ ミ ミ レ レ ド", "chunks": [7, 7],
-     "about": ["18世紀のフランスの歌「ああ、お母さん聞いて（Ah! vous dirai-je, maman）」のメロディです。モーツァルトはこのメロディで変奏曲（K.265）を書きました。",
-               "英語の歌詞「Twinkle, Twinkle, Little Star」で世界中に広まり、日本でも「きらきら星」として歌われています。"],
-     "tip": "白鍵だけ、同じ音を2回ずつ。はじめてピアノにさわる人にいちばんおすすめの曲です。"},
-    {"slug": "jingle-bells", "title": "ジングルベル", "search": "ジングルベル", "composer": "ピアポント",
-     "image": None, "free": True, "long": "free", "transposed": False,
-     "doremi": "ミ ミ ミ ミ ミ ミ ミ ソ ド レ ミ ファ ファ ファ ファ ファ ミ ミ ミ ミ ミ レ レ ミ", "chunks": [3, 3, 5, 5, 8],
-     "about": ["アメリカのジェームズ・ロード・ピアポントが作った歌で、1857年に「One Horse Open Sleigh」という題で出版されました。",
-               "今ではクリスマスの定番の曲です。「ミ ミ ミ」のくり返しから始まるので、すぐに弾けるようになります。"],
-     "tip": "「ミ ミ ミ」「ミ ミ ミ」のあとに「ミ ソ ド レ ミ」。リズムよく、鈴を鳴らすつもりで。"},
-    {"slug": "neko-funjatta", "title": "ねこふんじゃった", "search": "ねこふんじゃった", "composer": "作曲者不明",
-     "image": None, "free": True, "long": None, "transposed": False,
-     "doremi": "レ♯ ド♯ ファ♯ ファ♯ ファ♯ レ♯ ド♯ ファ♯ ファ♯ ファ♯ レ♯ ド♯ ファ♯ ファ♯ レ♯ ファ♯", "chunks": [5, 5, 6],
-     "about": ["だれが作ったのかわからない曲ですが、世界中で弾かれています。国によって名前が違い、ドイツでは「ノミのワルツ」、ロシアでは「犬のワルツ」などと呼ばれています。",
-               "ほとんど黒鍵だけで弾けるので、ピアノを習いはじめたころに覚える人が多い曲です。"],
-     "tip": "黒鍵の「レ♯ ド♯ ファ♯」の3つの場所を覚えれば、あとはくり返し。色をたどれば、黒鍵も迷わず押せます。"},
-    {"slug": "clair-de-lune", "title": "月の光", "search": "月の光", "composer": "ドビュッシー",
-     "image": "composer_debussy.png", "free": False, "long": "premium", "transposed": True,
-     "doremi": "ソ ミ レ ミ レ ド レ ド ミ ド シ ド シ ファ ラ シ", "chunks": [8, 8],
-     "about": ["ドビュッシーのピアノ曲集「ベルガマスク組曲」の第3曲です（1890年ごろに書かれ、1905年に出版）。題名はヴェルレーヌの詩に由来するといわれています。",
-               "原曲は変ニ長調で黒鍵の多い曲ですが、Plush Keys の編曲は白鍵だけで弾けるように調を移しています。"],
-     "tip": "ゆっくりした曲なので、音の長さを感じながら。最初は「やさしい」で流れをつかみましょう。"},
-    {"slug": "minute-waltz", "title": "子犬のワルツ", "search": "子犬のワルツ", "composer": "ショパン",
-     "image": "composer_chopin.png", "free": False, "long": "premium", "transposed": False,
-     "doremi": "ラ♭ ソ ラ♭ ド シ♭ ソ ラ♭ シ♭ ラ♭ ド シ♭ ソ ラ♭ ド シ♭ ソ", "chunks": [8, 8],
-     "about": ["ショパンのワルツ 変ニ長調 作品64-1（1847年）です。自分のしっぽを追いかけてくるくる回る子犬のようすを表したといわれています。",
-               "英語では「Minute Waltz（小さなワルツ）」と呼ばれます。"],
-     "tip": "「ラ♭ ソ ラ♭ ド シ♭ ソ」と、くるくる回るような音型が続きます。最初はゆっくり、形を指に覚えさせて。"},
-    {"slug": "la-campanella", "title": "ラ・カンパネラ", "search": "カンパネラ", "composer": "リスト",
-     "image": "composer_liszt.png", "free": False, "long": None, "transposed": False,
-     "doremi": "ド♯ レ♯ シ シ レ♯ シ レ♯ ラ♯ レ♯ ソ♯ レ♯ ソ レ♯ ソ♯ レ♯ ソ", "chunks": [8, 8],
-     "about": ["リストの「パガニーニによる大練習曲」の第3番です（今よく弾かれるのは1851年の版）。パガニーニのヴァイオリン協奏曲第2番のメロディをもとにしています。",
-               "「カンパネラ」はイタリア語で「鐘」。高い「レ♯」が鐘のように何度も鳴ります。"],
-     "tip": "黒鍵がたくさん出てきますが、色をたどれば大丈夫。高い「レ♯」の鐘の音を合図に進みます。"},
-    {"slug": "moonlight-sonata", "title": "月光ソナタ 第1楽章", "search": "月光", "composer": "ベートーヴェン",
-     "image": "composer_beethoven.png", "free": False, "long": "premium", "transposed": True,
-     "doremi": "ミ ミ ミ ミ ミ ミ ファ ミ レ ソ ド", "chunks": [3, 3, 5],
-     "about": ["ベートーヴェンのピアノソナタ第14番 嬰ハ短調 作品27-2（1801年）の第1楽章です。「月光」という呼び名は、詩人レルシュタープが湖に映る月の光にたとえたことから広まったといわれています。",
-               "原曲は嬰ハ短調。Plush Keys の編曲は白鍵だけで弾けるように調を移しています。"],
-     "tip": "同じ音をそっとくり返すメロディです。伴奏はアプリがいっしょに弾いてくれるので、メロディだけに集中できます。"},
-    {"slug": "jesu-joy", "title": "主よ人の望みの喜びよ", "search": "主よ人の望みの喜びよ", "composer": "バッハ",
-     "image": "composer_bach.png", "free": False, "long": "premium", "transposed": False,
-     "doremi": "ソ ラ シ レ ド ド ミ レ レ ソ ファ♯ ソ レ シ ソ ラ シ ド", "chunks": [6, 6, 6],
-     "about": ["バッハのカンタータ第147番「心と口と行いと生活で」（1723年）の中で歌われるコラールのメロディです。",
-               "3つずつの音がなめらかに流れるのが特徴で、結婚式やお祝いの場でもよく演奏されます。"],
-     "tip": "「ソ ラ シ」「レ ド ド」と3つずつのまとまりで。流れるように、ゆっくりから。"},
-    {"slug": "gymnopedie", "title": "ジムノペディ 第1番", "search": "ジムノペディ", "composer": "サティ",
-     "image": "composer_satie.png", "free": False, "long": None, "transposed": True,
-     "doremi": "ミ ソ ファ ミ シ ラ シ ド ソ ミ ミ ソ ファ ミ シ ラ", "chunks": [10, 6],
-     "about": ["フランスの作曲家エリック・サティが1888年に書いたピアノ曲です。ゆったりした3拍子と、静かで不思議な響きが特徴です。",
-               "原曲はニ長調。Plush Keys の編曲は白鍵だけで弾けるように調を移しています。"],
-     "tip": "とてもゆっくりした曲です。1つ1つの音を長めに、静かに押してみましょう。"},
-]
+CATS = [("classical", "クラシック", "Classical"),
+        ("folk", "童謡・唱歌・世界の歌", "Nursery rhymes & folk songs"),
+        ("christmas", "クリスマスの歌", "Christmas songs")]
+JA2EN = {"ド": "C", "レ": "D", "ミ": "E", "ファ": "F", "ソ": "G", "ラ": "A", "シ": "B"}
+EN_SONGS = [s for s in SONGS if s.get("en")]
 
 
 def esc(s):
     return html.escape(s, quote=True)
 
 
-def doremi_lines(song):
-    notes = song["doremi"].split()
+def ja_url(song):
+    return f"{BASE}songs/{song['slug']}.html"
+
+
+def en_url(song):
+    return f"{BASE}en/songs/{song['slug']}.html"
+
+
+def letters(doremi):
+    """ドレミを音名に (ファ♯ → F♯)。"""
+    out = []
+    for n in doremi.split():
+        acc = n[-1] if n[-1] in "♯♭" else ""
+        out.append(JA2EN[n[:-1] if acc else n] + acc)
+    return " ".join(out)
+
+
+def note_lines(notes, chunks):
+    notes = notes.split()
     lines, i = [], 0
-    for n in song["chunks"]:
+    for n in chunks:
         if i >= len(notes):
             break
         lines.append(" ".join(notes[i:i + n])); i += n
@@ -134,8 +77,43 @@ def accidental_note(song):
         return "♯ のついた音は、すぐ右の黒鍵です。"
     if "♭" in notes:
         return "♭ のついた音は、すぐ左の黒鍵です。"
-    return "白鍵だけで弾けます。"
+    return "曲の最後まで白鍵だけで弾けます。" if song["white"] else "ここまでは白鍵だけで弾けます。"
 
+
+def accidental_note_en(song):
+    notes = song["doremi"]
+    if "♯" in notes and "♭" in notes:
+        return "♯ means the black key just to the right, and ♭ the black key just to the left."
+    if "♯" in notes:
+        return "A note with ♯ is the black key just to the right of it."
+    if "♭" in notes:
+        return "A note with ♭ is the black key just to the left of it."
+    return "White keys only, all the way to the end." if song["white"] else "White keys only, up to here."
+
+
+def composers_ld(names):
+    people = [{"@type": "Person", "name": n} for n in names]
+    return people[0] if len(people) == 1 else people
+
+
+def related(song, pool):
+    others = [s for s in pool if s["slug"] != song["slug"]]
+    same = [s for s in others if s["composer"] == song["composer"]]
+    cat = [s for s in others if s not in same and s["cat"] == song["cat"]]
+    rest = [s for s in others if s not in same and s not in cat]
+    return (same + cat + rest)[:6]
+
+
+def alternates(song):
+    """同じ曲の日本語と英語のページを、検索エンジンに知らせる。"""
+    if not song.get("en"):
+        return ""
+    return (f'<link rel="alternate" hreflang="ja" href="{ja_url(song)}" />\n'
+            f'<link rel="alternate" hreflang="en" href="{en_url(song)}" />\n'
+            f'<link rel="alternate" hreflang="x-default" href="{en_url(song)}" />\n')
+
+
+# ---------------------------------------------------------------- 日本語
 
 def page_title(song):
     return f"{song['title']}をドレミで｜楽譜なしで弾く方法 - Plush Keys"
@@ -164,13 +142,6 @@ def faq(song):
     ]
 
 
-def related(song):
-    others = [s for s in SONGS if s["slug"] != song["slug"]]
-    same = [s for s in others if s["composer"] == song["composer"]]
-    rest = [s for s in others if s not in same]
-    return (same + rest)[:6]
-
-
 CSS_LINK = '<link rel="stylesheet" href="../styles.css" />'
 FOOTER = """<footer>
   <div>
@@ -185,29 +156,34 @@ FOOTER = """<footer>
 
 
 def song_page(song):
-    url = f"{BASE}songs/{song['slug']}.html"
-    lines = doremi_lines(song)
+    url = ja_url(song)
+    lines = note_lines(song["doremi"], song["chunks"])
     status_badge = '<span class="song-badge free">無料で弾ける</span>' if song["free"] else '<span class="song-badge premium">プレミアム</span>'
     img = (f'<img class="song-face" src="../assets/composers/{song["image"]}" alt="{esc(song["composer"])}の似顔絵（アプリの作曲家ずかんより）" width="112" height="112" loading="lazy" />'
            if song["image"] else '<img class="song-face" src="../assets/icon@3x.png" alt="Plush Keys のアイコン" width="112" height="112" loading="lazy" />')
     play_note = ("無料の曲です。" if song["free"] else "プレミアム（買い切り ¥300・3日間の無料お試しあり）の曲です。") + \
                 ({"premium": "もっと長く弾けるロング版はプレミアムです。", "free": "ロング版も無料です。"}.get(song["long"], ""))
-    key_note = ("Plush Keys の編曲での音です（白鍵だけで弾けるように、原曲から調を移しています）。"
+    key_note = ("Plush Keys の編曲での音です（原曲から調を移しています）。"
                 if song["transposed"] else "Plush Keys の編曲で、最初に出てくるメロディの音です。")
     faqs = faq(song)
+    work = {"@type": "MusicComposition", "name": song["title"], "url": url}
+    if not song.get("trad"):
+        work["composer"] = composers_ld(song.get("persons") or [song["composer"]])
     ld = {"@context": "https://schema.org", "@graph": [
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Plush Keys", "item": BASE},
             {"@type": "ListItem", "position": 2, "name": "曲ごとの弾き方", "item": f"{BASE}songs/"},
             {"@type": "ListItem", "position": 3, "name": song["title"], "item": url}]},
-        {"@type": "MusicComposition", "name": song["title"], "composer": {"@type": "Person", "name": song["composer"]}, "url": url},
+        work,
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]},
     ]}
-    rel = "\n".join(f'      <li><a href="{s["slug"]}.html">{esc(s["title"])}</a><span class="song-link-sub">{esc(s["composer"])}</span></li>' for s in related(song))
+    rel = "\n".join(f'      <li><a href="{s["slug"]}.html">{esc(s["title"])}</a><span class="song-link-sub">{esc(s["composer"])}</span></li>' for s in related(song, SONGS))
     faq_html = "\n".join(f"    <details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in faqs)
     about_html = "\n".join(f"    <p>{esc(p)}</p>" for p in song["about"])
     doremi_html = "<br />".join(esc(l) for l in lines)
+    lang_link = (f'<a class="song-lang" href="../en/songs/{song["slug"]}.html" hreflang="en" lang="en">English</a>'
+                 if song.get("en") else "")
     return f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -216,9 +192,10 @@ def song_page(song):
 <title>{esc(page_title(song))}</title>
 <meta name="description" content="{esc(page_desc(song))}" />
 <link rel="canonical" href="{url}" />
-<meta name="apple-itunes-app" content="app-id=6780288745" />
+{alternates(song)}<meta name="apple-itunes-app" content="app-id=6780288745" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Plush Keys" />
+<meta property="og:locale" content="ja_JP" />
 <meta property="og:title" content="{esc(song['title'])}をドレミで｜楽譜なしで弾く方法" />
 <meta property="og:description" content="{esc(page_desc(song))}" />
 <meta property="og:url" content="{url}" />
@@ -230,7 +207,7 @@ def song_page(song):
 <body class="song-page">
 <div class="topbar"><a class="brand" href="../">Plush&nbsp;Keys<span class="dot">.</span></a><a class="cta-btn small" href="{STORE}">アプリを見る</a></div>
 <main class="wrap">
-  <nav class="crumbs" aria-label="パンくずリスト"><a href="../">Plush Keys</a> › <a href="./">曲ごとの弾き方</a> › <span>{esc(song['title'])}</span></nav>
+  <nav class="crumbs" aria-label="パンくずリスト">{lang_link}<a href="../">Plush Keys</a> › <a href="./">曲ごとの弾き方</a> › <span>{esc(song['title'])}</span></nav>
   <header class="song-head">
     {img}
     <div>
@@ -285,29 +262,50 @@ def song_page(song):
 """
 
 
+def index_items(songs, en=False):
+    def item(s):
+        if en:
+            e = s["en"]
+            return (f'    <li><a href="{s["slug"]}.html"><span class="song-link-title">{esc(e["title"])}</span>'
+                    f'<span class="song-link-sub">{esc(e["composer"])} · {"Free" if s["free"] else "Premium"}</span>'
+                    f'<span class="song-link-notes">{esc(" ".join(letters(s["doremi"]).split()[:6]))}…</span></a></li>')
+        return (f'    <li><a href="{s["slug"]}.html"><span class="song-link-title">{esc(s["title"])}</span>'
+                f'<span class="song-link-sub">{esc(s["composer"])}・{"無料" if s["free"] else "プレミアム"}</span>'
+                f'<span class="song-link-notes">{esc(" ".join(s["doremi"].split()[:6]))}…</span></a></li>')
+    blocks = []
+    for key, ja_name, en_name in CATS:
+        group = [s for s in songs if s["cat"] == key]
+        if group:
+            blocks.append(f'  <h2 class="song-index-h2">{esc(en_name if en else ja_name)}</h2>\n'
+                          f'  <ul class="song-links song-index">\n' + "\n".join(item(s) for s in group) + "\n  </ul>")
+    return "\n".join(blocks)
+
+
+INDEX_ALTERNATES = (f'<link rel="alternate" hreflang="ja" href="{BASE}songs/" />\n'
+                    f'<link rel="alternate" hreflang="en" href="{BASE}en/songs/" />\n'
+                    f'<link rel="alternate" hreflang="x-default" href="{BASE}en/songs/" />\n')
+
+
 def index_page():
     url = f"{BASE}songs/"
-    items = "\n".join(
-        f'    <li><a href="{s["slug"]}.html"><span class="song-link-title">{esc(s["title"])}</span>'
-        f'<span class="song-link-sub">{esc(s["composer"])}・{"無料" if s["free"] else "プレミアム"}</span>'
-        f'<span class="song-link-notes">{esc(" ".join(s["doremi"].split()[:6]))}…</span></a></li>'
-        for s in SONGS)
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "楽譜なしで弾ける名曲のドレミ",
-          "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": f"{BASE}songs/{s['slug']}.html", "name": s["title"]}
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": ja_url(s), "name": s["title"]}
                               for i, s in enumerate(SONGS)]}
-    desc = "エリーゼのために・カノン・トルコ行進曲・月の光など、有名な曲の最初のメロディをドレミで紹介。楽譜が読めなくても、Plush Keys なら色をたどって弾けます。"
+    desc = ("エリーゼのために・カノン・月の光などのクラシック、ハッピーバースデー・かえるの合唱などの童謡、きよしこの夜などのクリスマスの歌。"
+            "有名な曲の最初のメロディをドレミで紹介。楽譜が読めなくても、Plush Keys なら色をたどって弾けます。")
     return f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>名曲をドレミで｜楽譜なしで弾ける曲の一覧 - Plush Keys</title>
+<title>名曲や童謡をドレミで｜楽譜なしで弾ける曲の一覧 - Plush Keys</title>
 <meta name="description" content="{esc(desc)}" />
 <link rel="canonical" href="{url}" />
-<meta name="apple-itunes-app" content="app-id=6780288745" />
+{INDEX_ALTERNATES}<meta name="apple-itunes-app" content="app-id=6780288745" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Plush Keys" />
-<meta property="og:title" content="名曲をドレミで｜楽譜なしで弾ける曲の一覧" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:title" content="名曲や童謡をドレミで｜楽譜なしで弾ける曲の一覧" />
 <meta property="og:description" content="{esc(desc)}" />
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{BASE}assets/screenshots/og-image.jpg" />
@@ -318,12 +316,10 @@ def index_page():
 <body class="song-page">
 <div class="topbar"><a class="brand" href="../">Plush&nbsp;Keys<span class="dot">.</span></a><a class="cta-btn small" href="{STORE}">アプリを見る</a></div>
 <main class="wrap">
-  <nav class="crumbs" aria-label="パンくずリスト"><a href="../">Plush Keys</a> › <span>曲ごとの弾き方</span></nav>
-  <h1 class="song-index-h1">名曲をドレミで弾こう</h1>
+  <nav class="crumbs" aria-label="パンくずリスト"><a class="song-lang" href="../en/songs/" hreflang="en" lang="en">English</a><a href="../">Plush Keys</a> › <span>曲ごとの弾き方</span></nav>
+  <h1 class="song-index-h1">名曲や童謡をドレミで弾こう</h1>
   <p class="lead">有名な曲の最初のメロディを、ドレミで紹介します。楽譜が読めなくても、Plush Keys なら落ちてくる色と同じ色の鍵盤を押すだけ。アプリには童謡からクラシックまで{APP_SONG_COUNT}曲が入っています。</p>
-  <ul class="song-links song-index">
-{items}
-  </ul>
+{index_items(SONGS)}
   <section class="cta-section">
     <a class="store-badge" href="{STORE}" aria-label="App Store で Plush Keys を見る"><img src="../assets/badge-appstore-ja.svg" alt="App Store でダウンロード" height="60" /></a>
   </section>
@@ -334,21 +330,231 @@ def index_page():
 """
 
 
+# ---------------------------------------------------------------- English
+
+def en_title(song):
+    return f"{song['en']['title']} – Easy Piano Letter Notes, No Sheet Music | Plush Keys"
+
+
+def en_desc(song):
+    e = song["en"]
+    status = "Free to play" if song["free"] else "A Premium song with a 3-day free trial"
+    first = " ".join(letters(song["doremi"]).split()[:8])
+    return (f"Easy piano letter notes for “{e['title']}” ({e['composer']}): {first}… "
+            f"In Plush Keys, just press the key that matches each falling color, no sheet music needed. {status}.")
+
+
+def en_faq(song):
+    t = song["en"]["title"]
+    play = (f"Yes. “{t}” is a free song: download the app and play it right away.") if song["free"] else \
+           (f"“{t}” is a Premium song. Premium is a one-time purchase ({PRICE_US} in the US) with a 3-day free trial, and no subscription. "
+            "Some days it is also picked as Today's Song, when one Premium song is free to play.")
+    if song["long"] == "premium":
+        play += " The longer version is part of Premium."
+    elif song["long"] == "free":
+        play += " The longer version is free, too."
+    return [
+        ("Can I play it without reading sheet music?",
+         "Yes. In Plush Keys, colored bars fall from the top. When a bar reaches the line, press the key of the same color. You don't need to know note names or read music. When you're ready, you can switch to a staff view (Premium)."),
+        ("Is it free to play?", play),
+        ("Can I use a real piano or keyboard?",
+         "Yes. Play on the on-screen keyboard of your iPhone or iPad, or connect a USB or Bluetooth MIDI keyboard or digital piano and follow the colors on real keys."),
+    ]
+
+
+EN_CSS_LINK = '<link rel="stylesheet" href="../../styles.css" />'
+EN_FOOTER = """<footer>
+  <div>
+    <a href="../../">Plush Keys</a>
+    <a href="./">Piano letter notes</a>
+    <a href="../../privacy.html">Privacy Policy</a>
+    <a href="mailto:hiro.apps.shoten@gmail.com">Support</a>
+  </div>
+  <span class="small">Plush Keys — play the piano by following colors, no sheet music needed<br />
+  Made by Hiro Apps Shoten, an independent developer. App Store is a trademark of Apple Inc.</span>
+</footer>"""
+
+
+def en_song_page(song):
+    e = song["en"]
+    url = en_url(song)
+    lines = note_lines(letters(song["doremi"]), song["chunks"])
+    status_badge = '<span class="song-badge free">Free to play</span>' if song["free"] else '<span class="song-badge premium">Premium</span>'
+    img = (f'<img class="song-face" src="../../assets/composers/{song["image"]}" alt="Illustration of {esc(e["composer"])} from Plush Keys" width="112" height="112" loading="lazy" />'
+           if song["image"] else '<img class="song-face" src="../../assets/icon@3x.png" alt="Plush Keys app icon" width="112" height="112" loading="lazy" />')
+    play_note = ("A free song." if song["free"] else f"A Premium song (one-time purchase, {PRICE_US} in the US, with a 3-day free trial).") + \
+                ({"premium": " The longer version is part of Premium.", "free": " The longer version is free, too."}.get(song["long"], ""))
+    key_note = ("Letter notes from the Plush Keys arrangement (moved from the original key). "
+                if song["transposed"] else "Letter notes of the opening melody in the Plush Keys arrangement. ")
+    faqs = en_faq(song)
+    work = {"@type": "MusicComposition", "name": e["title"], "url": url}
+    if e.get("persons") or not song.get("trad"):
+        work["composer"] = composers_ld(e.get("persons") or [e["composer"]])
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Plush Keys", "item": BASE},
+            {"@type": "ListItem", "position": 2, "name": "Piano letter notes", "item": f"{BASE}en/songs/"},
+            {"@type": "ListItem", "position": 3, "name": e["title"], "item": url}]},
+        work,
+        {"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]},
+    ]}
+    rel = "\n".join(f'      <li><a href="{s["slug"]}.html">{esc(s["en"]["title"])}</a><span class="song-link-sub">{esc(s["en"]["composer"])}</span></li>'
+                    for s in related(song, EN_SONGS))
+    faq_html = "\n".join(f"    <details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in faqs)
+    about_html = "\n".join(f"    <p>{esc(p)}</p>" for p in e["about"])
+    notes_html = "<br />".join(esc(l) for l in lines)
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{esc(en_title(song))}</title>
+<meta name="description" content="{esc(en_desc(song))}" />
+<link rel="canonical" href="{url}" />
+{alternates(song)}<meta name="apple-itunes-app" content="app-id=6780288745" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Plush Keys" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="{esc(e['title'])} – easy piano letter notes" />
+<meta property="og:description" content="{esc(en_desc(song))}" />
+<meta property="og:url" content="{url}" />
+<meta property="og:image" content="{BASE}assets/screenshots/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+{EN_CSS_LINK}
+<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
+</head>
+<body class="song-page">
+<div class="topbar"><a class="brand" href="../../">Plush&nbsp;Keys<span class="dot">.</span></a><a class="cta-btn small" href="{STORE_EN}">Get the app</a></div>
+<main class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb"><a class="song-lang" href="../../songs/{song['slug']}.html" hreflang="ja" lang="ja">日本語</a><a href="../../">Plush Keys</a> › <a href="./">Piano letter notes</a> › <span>{esc(e['title'])}</span></nav>
+  <header class="song-head">
+    {img}
+    <div>
+      <h1>{esc(e['title'])}<span class="song-h1-sub">easy piano letter notes</span></h1>
+      <p class="song-meta">{esc(e['composer'])}　{status_badge}</p>
+    </div>
+  </header>
+
+  <section class="card song-doremi">
+    <h2>The melody in letter notes</h2>
+    <p class="doremi">{notes_html}</p>
+    <p class="song-note">{esc(key_note)}{esc(accidental_note_en(song))}</p>
+  </section>
+
+  <section class="card">
+    <h2>About this piece</h2>
+{about_html}
+  </section>
+
+  <section class="card">
+    <h2>How to play it in Plush Keys</h2>
+    <ol class="song-steps">
+      <li>Open the app and tap “Play a Song”.</li>
+      <li>Type “{esc(e['search'])}” in the search box and pick the song.</li>
+      <li>When a falling colored bar reaches the line, press the key of the same color. If it feels hard, choose “Easy”.</li>
+    </ol>
+    <p>{esc(e['tip'])}</p>
+    <p class="song-note">{esc(play_note)}</p>
+  </section>
+
+  <section class="faq">
+    <h2>Questions</h2>
+{faq_html}
+  </section>
+
+  <section class="cta-section">
+    <p>No sheet music needed: follow the colors and play “{esc(e['title'])}”.</p>
+    <a class="store-badge" href="{STORE_EN}" aria-label="See Plush Keys on the App Store"><img src="../../assets/badge-appstore-en.svg" alt="Download on the App Store" height="60" /></a>
+  </section>
+
+  <section class="card">
+    <h2>More songs in letter notes</h2>
+    <ul class="song-links">
+{rel}
+    </ul>
+    <p class="song-note"><a href="./">All songs</a></p>
+  </section>
+</main>
+{EN_FOOTER}
+</body>
+</html>
+"""
+
+
+def en_index_page():
+    url = f"{BASE}en/songs/"
+    ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Easy piano letter notes for famous songs",
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": en_url(s), "name": s["en"]["title"]}
+                              for i, s in enumerate(EN_SONGS)]}
+    desc = ("Easy piano letter notes for Für Elise, Twinkle Twinkle Little Star, Happy Birthday, Jingle Bells, Ode to Joy and more. "
+            "No sheet music needed: in Plush Keys you just press the key that matches each falling color.")
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Easy Piano Letter Notes for Famous Songs – No Sheet Music | Plush Keys</title>
+<meta name="description" content="{esc(desc)}" />
+<link rel="canonical" href="{url}" />
+{INDEX_ALTERNATES}<meta name="apple-itunes-app" content="app-id=6780288745" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Plush Keys" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="Easy piano letter notes for famous songs" />
+<meta property="og:description" content="{esc(desc)}" />
+<meta property="og:url" content="{url}" />
+<meta property="og:image" content="{BASE}assets/screenshots/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+{EN_CSS_LINK}
+<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
+</head>
+<body class="song-page">
+<div class="topbar"><a class="brand" href="../../">Plush&nbsp;Keys<span class="dot">.</span></a><a class="cta-btn small" href="{STORE_EN}">Get the app</a></div>
+<main class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb"><a class="song-lang" href="../../songs/" hreflang="ja" lang="ja">日本語</a><a href="../../">Plush Keys</a> › <span>Piano letter notes</span></nav>
+  <h1 class="song-index-h1">Piano letter notes, song by song</h1>
+  <p class="lead">The first melody of well-known songs in letter notes (C D E…). No sheet music needed: in Plush Keys you just press the key that matches each falling color. The app has {APP_SONG_COUNT_EN} songs, from nursery rhymes to classical favorites.</p>
+{index_items(EN_SONGS, en=True)}
+  <section class="cta-section">
+    <a class="store-badge" href="{STORE_EN}" aria-label="See Plush Keys on the App Store"><img src="../../assets/badge-appstore-en.svg" alt="Download on the App Store" height="60" /></a>
+  </section>
+</main>
+{EN_FOOTER}
+</body>
+</html>
+"""
+
+
 def sitemap():
-    urls = [BASE, f"{BASE}privacy.html", f"{BASE}songs/"] + [f"{BASE}songs/{s['slug']}.html" for s in SONGS]
+    urls = ([BASE, f"{BASE}privacy.html", f"{BASE}songs/"] + [ja_url(s) for s in SONGS]
+            + [f"{BASE}en/songs/"] + [en_url(s) for s in EN_SONGS])
     body = "\n".join(f"  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>" for u in urls)
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}\n</urlset>\n'
 
 
+def check(song):
+    n = len(song["doremi"].split())
+    assert sum(song["chunks"]) == n, f"{song['slug']}: chunks {sum(song['chunks'])} != notes {n}"
+    assert song["cat"] in {c[0] for c in CATS}, song["slug"]
+    letters(song["doremi"])  # 知らない音名があれば KeyError で止まる
+
+
 def main():
-    out = ROOT / "songs"
+    slugs = [s["slug"] for s in SONGS]
+    assert len(slugs) == len(set(slugs)), "slug が重なっています"
+    out, out_en = ROOT / "songs", ROOT / "en" / "songs"
     out.mkdir(exist_ok=True)
+    out_en.mkdir(parents=True, exist_ok=True)
     for s in SONGS:
-        assert len(s["doremi"].split()) >= sum(s["chunks"][:1]), s["slug"]
+        check(s)
         (out / f"{s['slug']}.html").write_text(song_page(s), encoding="utf-8")
+    for s in EN_SONGS:
+        (out_en / f"{s['slug']}.html").write_text(en_song_page(s), encoding="utf-8")
     (out / "index.html").write_text(index_page(), encoding="utf-8")
+    (out_en / "index.html").write_text(en_index_page(), encoding="utf-8")
     (ROOT / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
-    print(f"wrote {len(SONGS)} song pages + songs/index.html + sitemap.xml")
+    print(f"wrote {len(SONGS)} Japanese + {len(EN_SONGS)} English song pages, both indexes and sitemap.xml")
 
 
 if __name__ == "__main__":

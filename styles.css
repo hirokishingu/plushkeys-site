@@ -647,6 +647,9 @@ body.scrolled .lang-section.show .sticky-cta {
 .song-index li a { display: block; height: 100%; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; color: var(--text); }
 .song-link-title { display: block; font-weight: 800; font-size: 16.5px; }
 .song-link-notes { display: block; font-size: 13px; color: var(--text-accent); margin-top: 4px; letter-spacing: .04em; }
+/* 日本語と英語のページを行き来するリンク (同じ曲のページがあるときだけ出す) */
+.crumbs .song-lang { float: right; margin-left: 12px; }
+.song-index-h2 { font-size: 20px; text-align: left; margin: 26px 0 12px; }
 @media (max-width: 560px) {
   .song-head { flex-direction: column; text-align: center; gap: 10px; }
   .song-page .card p.doremi { font-size: 20px; }
