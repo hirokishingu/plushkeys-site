@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parent.parent
 BASE = "https://hirokishingu.github.io/plushkeys-site/"
 STORE = "https://apps.apple.com/jp/app/plush-keys/id6780288745"
 TODAY = date.today().isoformat()
+# アプリの曲数 (日本語の一覧)。アプリの版を上げて曲数が変わったら直す。
+APP_SONG_COUNT = 192
 
 # chunks: ドレミを何音ずつ改行するか。free: 無料で弾けるか (False = プレミアム)。
 # long: ロング版があるか ("free" / "premium" / None)。transposed: アプリの編曲で調を移しているか。
@@ -318,7 +320,7 @@ def index_page():
 <main class="wrap">
   <nav class="crumbs" aria-label="パンくずリスト"><a href="../">Plush Keys</a> › <span>曲ごとの弾き方</span></nav>
   <h1 class="song-index-h1">名曲をドレミで弾こう</h1>
-  <p class="lead">有名な曲の最初のメロディを、ドレミで紹介します。楽譜が読めなくても、Plush Keys なら落ちてくる色と同じ色の鍵盤を押すだけ。アプリには童謡からクラシックまで192曲が入っています。</p>
+  <p class="lead">有名な曲の最初のメロディを、ドレミで紹介します。楽譜が読めなくても、Plush Keys なら落ちてくる色と同じ色の鍵盤を押すだけ。アプリには童謡からクラシックまで{APP_SONG_COUNT}曲が入っています。</p>
   <ul class="song-links song-index">
 {items}
   </ul>
