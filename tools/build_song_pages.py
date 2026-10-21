@@ -18,7 +18,7 @@ BASE = "https://hirokishingu.github.io/plushkeys-site/"
 STORE = "https://apps.apple.com/jp/app/plush-keys/id6780288745"
 TODAY = date.today().isoformat()
 # アプリの曲数 (日本語の一覧)。アプリの版を上げて曲数が変わったら直す。
-APP_SONG_COUNT = 194
+APP_SONG_COUNT = 193
 
 # chunks: ドレミを何音ずつ改行するか。free: 無料で弾けるか (False = プレミアム)。
 # long: ロング版があるか ("free" / "premium" / None)。transposed: アプリの編曲で調を移しているか。
